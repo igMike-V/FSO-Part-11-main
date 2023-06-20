@@ -1,2 +1,4 @@
-# FSO-Part-11-main
-CI/CD workflow for Full Stack Open part 11
+# Backend for FSO phonebook application
+
+Link to deployment:
+https://fso-phonebook-0qox.onrender.com/api/persons
