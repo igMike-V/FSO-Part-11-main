@@ -2,8 +2,9 @@ import axios from 'axios'
 
 
 const apiUrl = import.meta.env.DEV ? import.meta.env.VITE_API_URL_LOCAL : import.meta.env.VITE_API_URL_PROD
-
+console.log('api', apiUrl)
 const baseUrl = `${apiUrl}/api/persons`
+console.log('baseurl:', baseUrl)
 // Retrieve all entries from the server
 const  getAll = () => {
   const request = axios.get(baseUrl)
