@@ -1,6 +1,7 @@
 import axios from 'axios'
-//const baseUrl = 'http://localhost:3001/api/persons'
-const baseUrl = '/api/persons'
+const apiUrl = import.meta.env.VITE_API_URL_LOCAL || import.meta.env.API_URL_PROD
+
+const baseUrl = `${apiUrl}/api/persons`
 // Retrieve all entries from the server
 const  getAll = () => {
   const request = axios.get(baseUrl)

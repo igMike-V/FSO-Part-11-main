@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 })
 
 // Return info on the api
-app.get('/info', (req, res) => {
+app.get('/info', (_req, res) => {
   const date = new Date()
 
   Person.find({}).then(people => {
