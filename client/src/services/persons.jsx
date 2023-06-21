@@ -1,5 +1,5 @@
 import axios from 'axios'
-const apiUrl = import.meta.env.VITE_API_URL_LOCAL || process.env.API_URL_PROD
+const apiUrl = import.meta.env.DEV ? process.env.VITE_API_URL_LOCAL : process.env.API_URL_PROD
 
 const baseUrl = `${apiUrl}/api/persons`
 // Retrieve all entries from the server
