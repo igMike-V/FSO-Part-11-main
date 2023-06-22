@@ -18,8 +18,6 @@ jobs:
           node-version: "18"
       - name: Install dependencies
         run: npm install
-      - name: Build Backend
-        run: npm run build
       - name: Build Frontend
         working-directory: ./client
         run: npm install
