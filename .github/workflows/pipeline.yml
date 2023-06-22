@@ -9,7 +9,7 @@ on:
       - main
     types: [opened, synchronize, edited, reopened]
 jobs:
-  build_tests:
+  deployment_pipeline:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,6 +18,47 @@ jobs:
           node-version: "18"
       - name: Install dependencies
         run: npm install
+      - name: Build Backend
+        run: npm run build
+      - name: Build Frontend
+        working-directory: ./client
+        run: npm install
       - name: Build Frontend
         working-directory: ./client
         run: npm run build
+      - name: Deploy Front end to render
+        if: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.message, ' '), '#skip') == false }}
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with: 
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+      - name: Notify Discord
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: success()
+        with:
+          severity: info
+          username: igMike-V Deploy Bot
+          text: Phone Book Frontend Deployed to Render
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: Test Failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: failure()
+        with:
+          severity: error
+          username: igMike-V Deploy Bot
+          text: OH NO! Phone Book Frontend has failed to deploy to Render
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  tag_release:
+    needs: deployment_pipeline
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18" 
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.message, ' '), '#skip') == false }}
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
