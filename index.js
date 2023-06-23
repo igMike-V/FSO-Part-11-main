@@ -35,11 +35,12 @@ app.get('/info', (_req, res) => {
 
   Person.find({}).then((people) => {
     const pageContent = `
-            <p>Phonebook has info for ${people.length} ${
-      people.length === 1 ? 'person' : 'people'
-    }</p>
-            <p>${date}</p>
-        `
+      <p>
+        Phonebook has info for
+        ${people.length} ${people.length === 1 ? 'person' : 'people'}
+      </p>
+      <p>${date}</p>
+    `
     res.send(pageContent)
   })
 })
