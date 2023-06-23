@@ -32,6 +32,7 @@ jobs:
         uses: rjstone/discord-webhook-notify@v1.0.4
         if: success()
         with:
+          severity: info
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: Backend Deployment
           text: Phone book Backend successfully deployed
@@ -40,6 +41,7 @@ jobs:
         uses: rjstone/discord-webhook-notify@v1.0.4
         if: failure()
         with:
+          severity: error
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: Backend Deployment
           text: Phone book Backend deployment failed
@@ -69,6 +71,7 @@ jobs:
         uses: rjstone/discord-webhook-notify@v1.0.4
         if: success()
         with:
+          severity: info
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: Frontend Deployment
           text: Phone book Frontend successfully deployed
@@ -77,6 +80,7 @@ jobs:
         uses: rjstone/discord-webhook-notify@v1.0.4
         if: failure()
         with:
+          severity: error
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: Frontend Deployment
           text: Phone book Frontend deployment failed
