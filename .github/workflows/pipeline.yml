@@ -16,8 +16,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "18"
+      - name: Install dependencies
+        run: npm install
       - name: lint
         run: npm run lint
+      - name: Prettier check
+        run: npn run format
       - name: Deploy Backend to render
         if: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.message, ' '), '#skip') == false }}
         uses: johnbeynon/render-deploy-action@v0.0.8
