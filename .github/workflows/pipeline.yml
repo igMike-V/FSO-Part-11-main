@@ -30,22 +30,6 @@ jobs:
         with: 
           service-id: ${{ secrets.RENDER_SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
-      - name: Notify Discord
-        uses: rjstone/discord-webhook-notify@v1.0.4
-        if: success()
-        with:
-          severity: info
-          username: igMike-V Deploy Bot
-          text: Phone Book Frontend Deployed to Render
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      - name: Test Failure
-        uses: rjstone/discord-webhook-notify@v1.0.4
-        if: failure()
-        with:
-          severity: error
-          username: igMike-V Deploy Bot
-          text: OH NO! Phone Book Frontend has failed to deploy to Render
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
   tag_release:
     needs: deployment_pipeline
     runs-on: ubuntu-20.04
