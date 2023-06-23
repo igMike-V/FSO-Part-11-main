@@ -28,6 +28,22 @@ jobs:
         with: 
           service-id: ${{ secrets.API_SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
+      - name: Notify Discord on success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: success()
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          username: Backend Deployment
+          text: Phone book Backend successfully deployed
+          description: Deployment to Render successful
+      - name: Notify Discord on failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: failure()
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          username: Backend Deployment
+          text: Phone book Backend deployment failed
+          description: Deployment to Render failed chcck logs for more details
   frontend_deployment:
     runs-on: ubuntu-20.04
     steps:
@@ -49,6 +65,22 @@ jobs:
         with: 
           service-id: ${{ secrets.CLIENT_SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
+      - name: Notify Discord on success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: success()
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          username: Frontend Deployment
+          text: Phone book Frontend successfully deployed
+          description: Deployment to Render successful
+      - name: Notify Discord on failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: failure()
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          username: Frontend Deployment
+          text: Phone book Frontend deployment failed
+          description: Deployment to Render failed chcck logs for more details
   tag_release:
     needs: [frontend_deployment, backend_deployment]
     runs-on: ubuntu-20.04
