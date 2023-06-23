@@ -9,6 +9,21 @@ on:
       - main
     types: [opened, synchronize, edited, reopened]
 jobs:
+  backend_deployment:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: lint
+        run: npm run lint
+      - name: Deploy Backend to render
+        if: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.message, ' '), '#skip') == false }}
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with: 
+          service-id: ${{ secrets.API_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
   frontend_deployment:
     runs-on: ubuntu-20.04
     steps:
@@ -29,19 +44,6 @@ jobs:
         uses: johnbeynon/render-deploy-action@v0.0.8
         with: 
           service-id: ${{ secrets.CLIENT_SERVICE_ID }}
-          api-key: ${{ secrets.RENDER_API_KEY }}
-  backend_deployment:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-      - name: Deploy Backend to render
-        if: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.message, ' '), '#skip') == false }}
-        uses: johnbeynon/render-deploy-action@v0.0.8
-        with: 
-          service-id: ${{ secrets.API_SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
   tag_release:
     needs: [frontend_deployment, backend_deployment]
