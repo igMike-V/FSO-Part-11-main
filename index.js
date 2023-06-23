@@ -8,9 +8,9 @@ const Person = require('./models/person')
 
 app.use(cors())
 // MORGAN - Create a new token for the request data body
-morgan.token('req-data', req => {
-// If method is post then return the body
-  if(req.method === 'POST'){
+morgan.token('req-data', (req) => {
+  // If method is post then return the body
+  if (req.method === 'POST') {
     return JSON.stringify(req.body)
   }
   // Note Post
@@ -24,16 +24,20 @@ app.use(morgan(':method :url :status :response-time :req-data'))
 
 //Routes
 app.get('/', (req, res) => {
-  res.send('<h1>Phonebook Api</h1><p>Use /api/persons to return the listings.</p>')
+  res.send(
+    '<h1>Phonebook Api</h1><p>Use /api/persons to return the listings.</p>'
+  )
 })
 
 // Return info on the api
 app.get('/info', (_req, res) => {
   const date = new Date()
 
-  Person.find({}).then(people => {
+  Person.find({}).then((people) => {
     const pageContent = `
-            <p>Phonebook has info for ${people.length} ${people.length === 1 ? 'person' : 'people' }</p>
+            <p>Phonebook has info for ${people.length} ${
+      people.length === 1 ? 'person' : 'people'
+    }</p>
             <p>${date}</p>
         `
     res.send(pageContent)
@@ -42,17 +46,18 @@ app.get('/info', (_req, res) => {
 
 // Get all people
 app.get('/api/persons', (req, res) => {
-  Person.find({}).then(people => {
+  Person.find({}).then((people) => {
     res.json(people)
   })
 })
 
 // Get a single person
 app.get('/api/persons/:id', (req, res, next) => {
-  Person.findById(req.params.id).then(person => {
-    res.json(person)
-  })
-    .catch(error => next(error))
+  Person.findById(req.params.id)
+    .then((person) => {
+      res.json(person)
+    })
+    .catch((error) => next(error))
 })
 
 // Delete an entry
@@ -61,7 +66,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .then(() => {
       res.status(204).end()
     })
-    .catch(error => next(error))
+    .catch((error) => next(error))
 })
 
 // Add a new entry
@@ -69,31 +74,32 @@ app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   const newPerson = new Person({
-    'name': body.name,
-    'number': body.number
+    name: body.name,
+    number: body.number,
   })
 
-  newPerson.save().then(savedPerson => {
-    res.json(savedPerson)
-  })
-    .catch( error => next(error))
-
+  newPerson
+    .save()
+    .then((savedPerson) => {
+      res.json(savedPerson)
+    })
+    .catch((error) => next(error))
 })
 
 // Update an entry
 app.put('/api/persons/:id', (req, res, next) => {
   const { number, name } = req.body
 
-  Person.findByIdAndUpdate(req.params.id,
+  Person.findByIdAndUpdate(
+    req.params.id,
     { number, name },
-    { new : true, runValidators: true, context: 'query' }
+    { new: true, runValidators: true, context: 'query' }
   )
-    .then(returnedUpdate => {
+    .then((returnedUpdate) => {
       res.json(returnedUpdate)
     })
-    .catch(error => next(error))
+    .catch((error) => next(error))
 })
-
 
 // for unknown endpoints:
 const unknownEndpoint = (req, res) => {
@@ -105,10 +111,10 @@ const errorHandler = (error, req, res, next) => {
   console.error(error.message)
   if (error.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' })
-  } else if (error.name === 'ValidationError'){
+  } else if (error.name === 'ValidationError') {
     return res.status(400).send(error.message)
   } else if (error.name === 'MongoServerError') {
-    return(res.status(400).send(error.message))
+    return res.status(400).send(error.message)
   }
   next(error)
 }

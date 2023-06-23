@@ -10,7 +10,6 @@ import personService from './services/persons'
 import Notifications from './components/Notifications'
 
 const App = () => {
-
   // State
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
@@ -26,15 +25,17 @@ const App = () => {
   useEffect(() => {
     personService
       .getAll()
-      .then(personList => {
+      .then((personList) => {
         setPersons(personList)
       })
-      .catch(error => console.log('problem communicating with the server: ', error ))
+      .catch((error) =>
+        console.log('problem communicating with the server: ', error)
+      )
   }, [])
 
   // Clean up message
   useEffect(() => {
-    if(notification.messageLive){
+    if (notification.messageLive) {
       setTimeout(() => {
         setNotification({ isError: false, text: null, messageLive: false })
       }, 6000)
@@ -42,7 +43,7 @@ const App = () => {
   }, [notification])
 
   // Set Notification messages
-  const setMessage = message => {
+  const setMessage = (message) => {
     setNotification({
       isError: false,
       text: message,
@@ -51,7 +52,7 @@ const App = () => {
   }
 
   // Set Error Message
-  const setError = message => {
+  const setError = (message) => {
     setNotification({
       isError: true,
       text: message,
@@ -63,7 +64,7 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     // Extract person from state if they exist
-    const existingPerson = persons.find(person => person.name === newName)
+    const existingPerson = persons.find((person) => person.name === newName)
     // Make a new person object to add or update in the server
     const newPerson = {
       name: newName,
@@ -71,31 +72,37 @@ const App = () => {
     }
 
     // Check state for existing person to determine if we need to update or add to server
-    if(existingPerson){
+    if (existingPerson) {
       // Person is already in the phone book we should ask if user wants to update
-      if (window.confirm(`${newName} is already added the phone book, Replace the old Number with a new one?`)) {
-        personService.update(existingPerson.id, newPerson)
-          .then(updatedPerson => {
-            setPersons(persons.map(person => {
-              return person.id === updatedPerson.id ? updatedPerson : person
-            }))
+      if (
+        window.confirm(
+          `${newName} is already added the phone book, Replace the old Number with a new one?`
+        )
+      ) {
+        personService
+          .update(existingPerson.id, newPerson)
+          .then((updatedPerson) => {
+            setPersons(
+              persons.map((person) => {
+                return person.id === updatedPerson.id ? updatedPerson : person
+              })
+            )
             setMessage(`Updated Phone number for: ${updatedPerson.name}`)
           })
-          .catch(error => {
-            setError( error.response.data )
+          .catch((error) => {
+            setError(error.response.data)
           })
       }
-
     } else {
       // Person is not in the phone book we are safe to add an new entry
       personService
         .create(newPerson)
-        .then(returnedPerson => {
+        .then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson))
           setMessage(`Added ${returnedPerson.name}`)
         })
-        .catch(error => {
-          console.log('could not add person to server: ', error )
+        .catch((error) => {
+          console.log('could not add person to server: ', error)
           setError(error.response.data)
         })
     }
@@ -104,20 +111,22 @@ const App = () => {
     setNewNumber('')
   }
 
-  const handleDelete = id => {
-    const personName = persons.find(person => person.id === id).name
-    if (window.confirm(`Are you sure you want to delete ${personName} `)){
+  const handleDelete = (id) => {
+    const personName = persons.find((person) => person.id === id).name
+    if (window.confirm(`Are you sure you want to delete ${personName} `)) {
       personService
         .deleteEntry(id)
-        .then(req => {
+        .then((req) => {
           console.log(req)
-          setPersons(persons.filter(person => person.id !== id))
+          setPersons(persons.filter((person) => person.id !== id))
           setMessage(`${personName} has been removed from your list`)
         })
-        .catch(error => {
+        .catch((error) => {
           console.log('Error Deleting Entry', error)
-          setError(`Information for ${personName} was already removed from the server.`)
-          setPersons(persons.filter(person => person.id !== id))
+          setError(
+            `Information for ${personName} was already removed from the server.`
+          )
+          setPersons(persons.filter((person) => person.id !== id))
         })
     }
   }
@@ -135,12 +144,13 @@ const App = () => {
     setFilter(event.target.value)
   }
 
-
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notifications message={notification.text} isError={notification.isError} />
-
+      <Notifications
+        message={notification.text}
+        isError={notification.isError}
+      />
 
       <Filter handleFilter={handleFilter} filter={filter} />
 
@@ -157,7 +167,6 @@ const App = () => {
       <h2>Numbers</h2>
 
       <Persons persons={persons} filter={filter} handleDelete={handleDelete} />
-
     </div>
   )
 }

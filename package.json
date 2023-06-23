@@ -7,7 +7,10 @@
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "lint": "npx eslint --ext .js --ext .jsx ."
+    "lint": "npx eslint --ext .js --ext .jsx .",
+    "format": "npx prettier --check ./**/*.css ./**/*.js ./**/*.jsx",
+    "format:fix": "npx prettier --fix ./**/*.css ./**/*.js ./**/*.jsx",
+    "format:write": "npx prettier --write ./**/*.css ./**/*.js ./**/*.jsx"
   },
   "repository": {
     "type": "git",
