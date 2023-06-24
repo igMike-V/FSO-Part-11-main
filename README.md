@@ -1,4 +1,8 @@
 # Backend for FSO phonebook application
 
 Link to deployment:
-https://fso-phonebook-0qox.onrender.com/api/persons
+API:
+https://fso-part-11-api.onrender.com
+
+Frontend:
+https://fso-part-11-frontend.onrender.com
